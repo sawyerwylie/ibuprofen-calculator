@@ -71,11 +71,11 @@ st.title("Ibuprofen Dosing Calculator")
 choice = st.selectbox("Would you like to dose by weight or age?", ["weight", "age"])
 
 if choice == "weight":
-    unit = st.selectbox("Choose your units", ["kg", "pounds"])
+    unit = st.selectbox("Choose your units", ["Kilograms", "Pounds"])
 
     weight = st.number_input(f"Enter the patient's weight in {unit}", min_value=0.0, step=0.1)
     
-    if unit == "pounds":
+    if unit == "Pounds":
         weight *= 0.453592
 
     if weight <= 0:
@@ -92,7 +92,14 @@ if choice == "weight":
         st.write(result)
 
 elif choice == "age":
-    age = st.number_input("Enter the patient's age in months", min_value=0, step=1)
+    # Add a selection for years or months
+    age_unit = st.selectbox("Would you like to enter the age in years or months?", ["Years", "Months"])
+
+    if age_unit == "Years":
+        age_years = st.number_input("Enter the patient's age in years", min_value=0, step=1)
+        age = age_years * 12  # Convert years to months
+    else:
+        age = st.number_input("Enter the patient's age in months", min_value=0, step=1)
 
     if age < 6:
         st.error("This age does not routinely receive ibuprofen. Please consult a medical provider.")
@@ -106,3 +113,4 @@ elif choice == "age":
     if st.button("Calculate Dosage"):
         result = get_dosage_by_age(age, formulation)
         st.write(result)
+
