@@ -1,3 +1,7 @@
+import streamlit as st
+
+
+
 def get_dosage_by_weight(weight, formulation):
     # Define weight ranges and corresponding dosages
     if 5.4 <= weight <= 8.1:
@@ -75,8 +79,9 @@ def restart_prompt():
     if restart == 'yes':
         main()  # Restart the calculator
     else:
-        print("Exiting the calculator. Goodbye!")
+        st.write("Exiting the calculator. Goodbye!")
 
+st.title("Ibuprofen Dosage Calculator")
 
 def main():
     while True:  # Loop to allow for multiple calculations
@@ -89,41 +94,41 @@ def main():
                 unit = input("Would you like to enter the weight in (1) kg or (2) lbs? ").strip()
 
                 if unit == '1':
-                    weight = float(input("Enter the patient's weight in kg: ").strip())
+                    weight = st.number_input("Enter the patient's weight in kg: ").strip()
                 elif unit == '2':
-                    weight_in_lbs = float(input("Enter the patient's weight in lbs: ").strip())
+                    weight_in_lbs = st.number_input("Enter the patient's weight in lbs: ").strip()
                     # Convert pounds to kilograms (1 lb = 0.453592 kg)
                     weight = weight_in_lbs * 0.453592
                 else:
-                    print("Invalid unit choice.")
+                    st.write("Invalid unit choice.")
                     restart_prompt()
                     continue
 
                 # Check if weight is within the acceptable range
                 if weight < 5.4:  # Assuming 5.4 kg is the minimum for ibuprofen
-                    print("This weight does not routinely receive ibuprofen, please consult a medical provider.")
+                    st.write("This weight does not routinely receive ibuprofen, please consult a medical provider.")
                     restart_prompt()
                     continue
 
                 # Display the formulation choices as numbers
-                print("Select a formulation:")
-                print("1. Infant drops (50 mg/1.25mL)")
-                print("2. Children’s liquid (100 mg/5mL)")
-                print("3. Chewable tablets (50 mg)")
-                print("4. Junior-strength chewable tablets (100 mg)")
-                print("5. Adult Tablets (200 mg)")
+                st.write("Select a formulation:")
+                st.write("1. Infant drops (50 mg/1.25mL)")
+                st.write("2. Children’s liquid (100 mg/5mL)")
+                st.write("3. Chewable tablets (50 mg)")
+                st.write("4. Junior-strength chewable tablets (100 mg)")
+                st.write("5. Adult Tablets (200 mg)")
 
                 formulation = int(input("Enter the number corresponding to the formulation: ").strip())
 
                 if formulation not in range(1, 6):
-                    print("Invalid formulation choice.")
+                    st.write("Invalid formulation choice.")
                     restart_prompt()
                     continue
 
                 result = get_dosage_by_weight(weight, formulation)
 
             except ValueError:
-                print("Invalid input for weight or formulation. Please enter a valid number.")
+                st.write("Invalid input for weight or formulation. Please enter a valid number.")
                 restart_prompt()
                 continue
         elif choice == '2':
@@ -132,39 +137,39 @@ def main():
 
                 # Check if age is within the acceptable range
                 if age < 6:  # Assuming 6 months is the minimum for ibuprofen
-                    print("This age does not routinely receive ibuprofen, please consult a medical provider.")
+                    st.write("This age does not routinely receive ibuprofen, please consult a medical provider.")
                     restart_prompt()
                     continue
 
                 # Display the formulation choices as numbers
-                print("Select a formulation:")
-                print("1. Infant drops (50 mg/1.25mL)")
-                print("2. Children’s liquid (100 mg/5mL)")
-                print("3. Chewable tablets (50 mg)")
-                print("4. Junior-strength chewable tablets (100 mg)")
-                print("5. Adult Tablets (200 mg)")
+                st.write("Select a formulation:")
+                st.write("1. Infant drops (50 mg/1.25mL)")
+                st.write("2. Children’s liquid (100 mg/5mL)")
+                st.write("3. Chewable tablets (50 mg)")
+                st.write("4. Junior-strength chewable tablets (100 mg)")
+                st.write("5. Adult Tablets (200 mg)")
 
                 formulation = int(input("Enter the number corresponding to the formulation: ").strip())
 
                 if formulation not in range(1, 6):
-                    print("Invalid formulation choice.")
+                    st.write("Invalid formulation choice.")
                     restart_prompt()
                     continue
 
                 result = get_dosage_by_age(age, formulation)
 
             except ValueError:
-                print("Invalid input for age or formulation. Please enter a valid number.")
+                st.write("Invalid input for age or formulation. Please enter a valid number.")
                 restart_prompt()
                 continue
         else:
-            print("Invalid choice. Please enter 1 for weight or 2 for age.")
+            st.write("Invalid choice. Please enter 1 for weight or 2 for age.")
             restart_prompt()
             continue
 
         # Print the result only if the dosage calculation is successful
         if "does not routinely receive ibuprofen" not in result:
-            print(result)
+            st.write(result)
         restart_prompt()  # After displaying the result, ask if they want to restart
 
 
