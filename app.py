@@ -48,11 +48,11 @@ def get_dosage_by_age(age, formulation):
 
 def calculate_dose(dosage_mg, formulation, age=None, weight=None):
     formulations = {
-        'Infant drops': ('Infant drops', 50 / 1.25, 'liquid', '<2', '<23'),
-        'Children’s liquid': ('Children’s liquid', 100 / 5, 'liquid', '>2, <12', '>22, <96'),
-        'Chewable tablets': ('Chewable tablets', 50, 'tablet', '>2, <12', '>22, <96'),
-        'Junior-strength chewable tablets': ('Junior-strength chewable tablets', 100, 'tablet', '>2, <12', '>22, <96'),
-        'Adult tablets': ('Adult Tablets', 200, 'tablet', '>10', '>55')
+        'Infant Drops': ('Infant Drops', 50 / 1.25, 'liquid', '<2', '<23'),
+        'Children’s Liquid': ('Children’s Liquid', 100 / 5, 'liquid', '>2, <12', '>22, <96'),
+        'Chewable Tablets': ('Chewable Tablets', 50, 'tablet', '>2, <12', '>22, <96'),
+        'Junior-Strength Chewable Tablets': ('Junior-Strength Chewable Tablets', 100, 'tablet', '>2, <12', '>22, <96'),
+        'Adult Tablets': ('Adult Tablets', 200, 'tablet', '>10', '>55')
     }
 
     # Remove the concentration part in parentheses before checking
@@ -65,16 +65,16 @@ def calculate_dose(dosage_mg, formulation, age=None, weight=None):
 
     # Warning if age or weight does not match typical use
     if age is not None:
-        if (formulation_cleaned == 'Infant drops' and age >= 24) or \
-           (formulation_cleaned in ['Children’s liquid', 'Chewable tablets', 'Junior-strength chewable tablets'] and not (24 <= age <= 143)) or \
-           (formulation_cleaned == 'Adult tablets' and age < 120):
+        if (formulation_cleaned == 'Infant Drops' and age >= 24) or \
+           (formulation_cleaned in ['Children’s Liquid', 'Chewable Tablets', 'Junior-Strength Chewable Tablets'] and not (24 <= age <= 143)) or \
+           (formulation_cleaned == 'Adult Tablets' and age < 120):
             warning = f"{formulation_name} is not typically used for this age. Please make sure you selected the correct formulation."
             st.warning(warning)
 
     if weight is not None:
-        if (formulation_cleaned == 'Infant drops' and weight >= 23) or \
-           (formulation_cleaned in ['Children’s liquid', 'Chewable tablets', 'Junior-strength chewable tablets'] and not (22 < weight < 50)) or \
-           (formulation_cleaned == 'Adult tablets' and weight <= 55):
+        if (formulation_cleaned == 'Infant Drops' and weight >= 23) or \
+           (formulation_cleaned in ['Children’s Liquid', 'Chewable Tablets', 'Junior-Strength Chewable Tablets'] and not (22 < weight < 50)) or \
+           (formulation_cleaned == 'Adult Tablets' and weight <= 55):
             warning = f"{formulation_name} is not typically used for this weight. Please make sure you selected the correct formulation."
             st.warning(warning)
 
@@ -90,12 +90,12 @@ def calculate_dose(dosage_mg, formulation, age=None, weight=None):
 # Streamlit app layout
 st.title("Ibuprofen Dosing Calculator")
 
-choice = st.selectbox("Select Dosing By Weight Or Age", ["Weight", "Age"])
+choice = st.selectbox("Select Dosing by Weight or Age", ["Weight", "Age"])
 
 if choice == "Weight":
-    unit = st.selectbox("Select Dosing By Kilograms Or Pounds", ["Kilograms", "Pounds"])
+    unit = st.selectbox("Select Dosing By Kilograms or Pounds", ["Kilograms", "Pounds"])
 
-    weight = st.number_input(f"Enter The Patient's Weight In {unit}", min_value=0.0, step=0.1)
+    weight = st.number_input(f"Enter the Patient's Weight in {unit}", min_value=0.0, step=0.1)
 
     if unit == "Pounds":
         weight *= 0.453592
@@ -104,36 +104,36 @@ if choice == "Weight":
         st.error("Invalid weight. Please enter a weight greater than zero.")
         st.stop()
 
-    formulation = st.selectbox("Select The Formulation", 
-                               ["Infant drops (50mg/1.25mL)", 
-                                "Children’s liquid (100mg/5mL)", 
-                                "Chewable tablets (50mg/tablet)", 
-                                "Junior-strength chewable tablets (100mg/tablet)", 
-                                "Adult tablets (200mg/tablet)"])
+    formulation = st.selectbox("Select the Formulation", 
+                               ["Infant Drops (50mg/1.25mL)", 
+                                "Children’s Liquid (100mg/5mL)", 
+                                "Chewable Tablets (50mg/tablet)", 
+                                "Junior-Strength Chewable Tablets (100mg/tablet)", 
+                                "Adult Tablets (200mg/tablet)"])
     
     if st.button("Calculate Dosage"):
         result = get_dosage_by_weight(weight, formulation)
         st.write(result)
 
 elif choice == "Age":
-    age_unit = st.selectbox("Select Age As Years Or Months", ["Years", "Months"])
+    age_unit = st.selectbox("Select Age as Years or Months", ["Years", "Months"])
 
     if age_unit == "Years":
-        age_years = st.number_input("Enter The Patient's Age In Years", min_value=0, step=1)
+        age_years = st.number_input("Enter the Patient's Age in Years", min_value=0, step=1)
         age = age_years * 12
     else:
-        age = st.number_input("Enter The Patient's Age In Months", min_value=0, step=1)
+        age = st.number_input("Enter the Patient's Age in Months", min_value=0, step=1)
 
     if age < 6:
         st.error("This age does not routinely receive ibuprofen. Please consult a medical provider.")
         st.stop()
 
     formulation = st.selectbox("Select The Formulation", 
-                               ["Infant drops (50mg/1.25mL)", 
-                                "Children’s liquid (100mg/5mL)", 
-                                "Chewable tablets (50mg/tablet)", 
-                                "Junior-strength chewable tablets (100mg/tablet)", 
-                                "Adult tablets (200mg/tablet)"])
+                               ["Infant Drops (50mg/1.25mL)", 
+                                "Children’s Liquid (100mg/5mL)", 
+                                "Chewable Tablets (50mg/tablet)", 
+                                "Junior-Strength Chewable Tablets (100mg/tablet)", 
+                                "Adult Tablets (200mg/tablet)"])
 
     if st.button("Calculate Dosage"):
         result = get_dosage_by_age(age, formulation)
