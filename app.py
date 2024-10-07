@@ -1,5 +1,6 @@
 import streamlit as st
 
+# Function to get dosage by weight
 def get_dosage_by_weight(weight, formulation):
     if 5.4 <= weight <= 8.1:
         dosage_mg = 50
@@ -22,6 +23,7 @@ def get_dosage_by_weight(weight, formulation):
     
     return calculate_dose(dosage_mg, formulation)
 
+# Function to get dosage by age
 def get_dosage_by_age(age, formulation):
     if 6 <= age <= 11:
         dosage_mg = 50
@@ -44,13 +46,14 @@ def get_dosage_by_age(age, formulation):
     
     return calculate_dose(dosage_mg, formulation)
 
+# Function to calculate dose
 def calculate_dose(dosage_mg, formulation):
     formulations = {
-        'Infant drops': ('Infant drops', 50 / 1.25, 'liquid'), 
-        'Children’s liquid': ('Children’s liquid', 100 / 5, 'liquid'), 
-        'Chewable tablets': ('Chewable tablets', 50, 'tablet'), 
-        'Junior-strength chewable tablets': ('Junior-strength chewable tablets', 100, 'tablet'), 
-        'Adult tablets': ('Adult Tablets', 200, 'tablet')
+        'Infant drops (50mg/1.25mL)': ('Infant drops', 50 / 1.25, 'liquid'), 
+        'Children’s liquid (100mg/5mL)': ('Children’s liquid', 100 / 5, 'liquid'), 
+        'Chewable tablets (50mg/tablet)': ('Chewable tablets', 50, 'tablet'), 
+        'Junior-strength chewable tablets (100mg/tablet)': ('Junior-strength chewable tablets', 100, 'tablet'), 
+        'Adult tablets (200mg/tablet)': ('Adult Tablets', 200, 'tablet')
     }
 
     if formulation not in formulations:
@@ -58,59 +61,74 @@ def calculate_dose(dosage_mg, formulation):
 
     formulation_name, concentration, form_type = formulations[formulation]
 
+    # Calculate the required dose based on formulation type
     if form_type == 'liquid':
-        dose_ml = dosage_mg / concentration
-        return f"Dosage: {dose_ml:.2f} mL of {formulation_name}"
+        dose_ml = round(dosage_mg / concentration, 1)  # Round to the tenth place
+        return f"Dosage: {dose_ml} mL of {formulation_name}"
     else:
-        dose_tablets = dosage_mg / concentration
-        return f"Dosage: {dose_tablets:.2f} tablets of {formulation_name}"
+        dose_tablets = round(dosage_mg / concentration, 1)  # Round to the tenth place
+        return f"Dosage: {dose_tablets} tablets of {formulation_name}"
 
 # Streamlit app layout
 st.title("Ibuprofen Dosing Calculator")
 
+# Ask the user to choose between dosing by weight or age
 choice = st.selectbox("Would you like to dose by weight or age?", ["weight", "age"])
 
 if choice == "weight":
+    # Input for weight in kg or lbs
     unit = st.selectbox("Choose your units", ["Kilograms", "Pounds"])
-
-    weight = st.number_input(f"Enter the patient's weight in {unit}", min_value=0.0, step=0.1)
     
+    # Updated weight input field to start at 0 and allow decimals
+    weight = st.number_input(f"Enter the patient's weight in {unit}", min_value=0.0, step=1.0, format="%.1f")
+    
+    # Convert pounds to kg if necessary
     if unit == "Pounds":
         weight *= 0.453592
 
+    # Ensure weight is greater than zero
     if weight <= 0:
         st.error("Invalid weight. Please enter a weight greater than zero.")
         st.stop()
 
+    # Display formulation options with concentrations
     formulation = st.selectbox("Select the formulation", 
-                               ["Infant drops", "Children’s liquid", 
-                                "Chewable tablets", "Junior-strength chewable tablets", 
-                                "Adult tablets"])
+                               ["Infant drops (50mg/1.25mL)", 
+                                "Children’s liquid (100mg/5mL)", 
+                                "Chewable tablets (50mg/tablet)", 
+                                "Junior-strength chewable tablets (100mg/tablet)", 
+                                "Adult tablets (200mg/tablet)"])
     
+    # Calculate the dose when the button is clicked
     if st.button("Calculate Dosage"):
         result = get_dosage_by_weight(weight, formulation)
         st.write(result)
 
 elif choice == "age":
-    # Add a selection for years or months
+    # Ask if the user wants to enter the age in years or months
     age_unit = st.selectbox("Would you like to enter the age in years or months?", ["Years", "Months"])
 
+    # Convert years to months if necessary
     if age_unit == "Years":
         age_years = st.number_input("Enter the patient's age in years", min_value=0, step=1)
         age = age_years * 12  # Convert years to months
     else:
         age = st.number_input("Enter the patient's age in months", min_value=0, step=1)
 
+    # Ensure age is within the valid range
     if age < 6:
         st.error("This age does not routinely receive ibuprofen. Please consult a medical provider.")
         st.stop()
-    
+
+    # Display formulation options with concentrations
     formulation = st.selectbox("Select the formulation", 
-                               ["Infant drops", "Children’s liquid", 
-                                "Chewable tablets", "Junior-strength chewable tablets", 
-                                "Adult tablets"])
+                               ["Infant drops (50mg/1.25mL)", 
+                                "Children’s liquid (100mg/5mL)", 
+                                "Chewable tablets (50mg/tablet)", 
+                                "Junior-strength chewable tablets (100mg/tablet)", 
+                                "Adult tablets (200mg/tablet)"])
     
+    # Calculate the dose when the button is clicked
     if st.button("Calculate Dosage"):
         result = get_dosage_by_age(age, formulation)
         st.write(result)
-
