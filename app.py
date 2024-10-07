@@ -73,7 +73,7 @@ def calculate_dose(dosage_mg, formulation, age=None, weight=None):
 
     if weight is not None:
         if (formulation_cleaned == 'Infant drops' and weight >= 23) or \
-           (formulation_cleaned in ['Children’s liquid', 'Chewable tablets', 'Junior-strength chewable tablets'] and not (22 < weight < 96)) or \
+           (formulation_cleaned in ['Children’s liquid', 'Chewable tablets', 'Junior-strength chewable tablets'] and not (22 < weight < 50)) or \
            (formulation_cleaned == 'Adult tablets' and weight <= 55):
             warning = f"{formulation_name} is not typically used for this weight. Please make sure you selected the correct formulation."
             st.warning(warning)
@@ -90,10 +90,10 @@ def calculate_dose(dosage_mg, formulation, age=None, weight=None):
 # Streamlit app layout
 st.title("Ibuprofen Dosing Calculator")
 
-choice = st.selectbox("Would You Like To Dose By Weight Or Age?", ["Weight", "Age"])
+choice = st.selectbox("Select Dosing By Weight Or Age", ["Weight", "Age"])
 
 if choice == "Weight":
-    unit = st.selectbox("Choose Your Units", ["Kilograms", "Pounds"])
+    unit = st.selectbox("Select Dosing By Kilograms Or Pounds", ["Kilograms", "Pounds"])
 
     weight = st.number_input(f"Enter The Patient's Weight In {unit}", min_value=0.0, step=0.1)
 
@@ -116,7 +116,7 @@ if choice == "Weight":
         st.write(result)
 
 elif choice == "Age":
-    age_unit = st.selectbox("Would You Like To Enter The Age In Years Or Months?", ["Years", "Months"])
+    age_unit = st.selectbox("Select Age As Years Or Months", ["Years", "Months"])
 
     if age_unit == "Years":
         age_years = st.number_input("Enter The Patient's Age In Years", min_value=0, step=1)
