@@ -55,23 +55,26 @@ def calculate_dose(dosage_mg, formulation, age=None, weight=None):
         'Adult tablets': ('Adult Tablets', 200, 'tablet', '>10', '>55')
     }
 
-    if formulation not in formulations:
+    # Remove the concentration part in parentheses before checking
+    formulation_cleaned = formulation.split('(')[0].strip()
+
+    if formulation_cleaned not in formulations:
         return "Formulation not available."
 
-    formulation_name, concentration, form_type, age_range, weight_range = formulations[formulation]
+    formulation_name, concentration, form_type, age_range, weight_range = formulations[formulation_cleaned]
 
     # Warning if age or weight does not match typical use
     if age is not None:
-        if (formulation == 'Infant drops' and age >= 24) or \
-           (formulation in ['Children’s liquid', 'Chewable tablets', 'Junior-strength chewable tablets'] and not (24 <= age <= 143)) or \
-           (formulation == 'Adult tablets' and age < 120):
+        if (formulation_cleaned == 'Infant drops' and age >= 24) or \
+           (formulation_cleaned in ['Children’s liquid', 'Chewable tablets', 'Junior-strength chewable tablets'] and not (24 <= age <= 143)) or \
+           (formulation_cleaned == 'Adult tablets' and age < 120):
             warning = f"{formulation_name} is not typically used for this age. Please make sure you selected the correct formulation."
             st.warning(warning)
 
     if weight is not None:
-        if (formulation == 'Infant drops' and weight >= 23) or \
-           (formulation in ['Children’s liquid', 'Chewable tablets', 'Junior-strength chewable tablets'] and not (22 < weight < 96)) or \
-           (formulation == 'Adult tablets' and weight <= 55):
+        if (formulation_cleaned == 'Infant drops' and weight >= 23) or \
+           (formulation_cleaned in ['Children’s liquid', 'Chewable tablets', 'Junior-strength chewable tablets'] and not (22 < weight < 96)) or \
+           (formulation_cleaned == 'Adult tablets' and weight <= 55):
             warning = f"{formulation_name} is not typically used for this weight. Please make sure you selected the correct formulation."
             st.warning(warning)
 
@@ -109,7 +112,7 @@ if choice == "Weight":
                                 "Adult tablets (200mg/tablet)"])
     
     if st.button("Calculate Dosage"):
-        result = get_dosage_by_weight(weight, formulation.split()[0])
+        result = get_dosage_by_weight(weight, formulation)
         st.write(result)
 
 elif choice == "Age":
@@ -133,7 +136,5 @@ elif choice == "Age":
                                 "Adult tablets (200mg/tablet)"])
 
     if st.button("Calculate Dosage"):
-        result = get_dosage_by_age(age, formulation.split()[0])
+        result = get_dosage_by_age(age, formulation)
         st.write(result)
-
-
