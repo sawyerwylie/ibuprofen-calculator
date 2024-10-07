@@ -111,7 +111,7 @@ if choice == "Weight":
     if st.button("Calculate Dosage"):
         result = get_dosage_by_weight(weight, formulation)
         st.write(result)
-        st.write("Dose: Give every 6 hours if needed, for fever or pain. DO NOT GIVE MORE THAN 4 DOSES IN 24 HOURS.")
+        st.write("Give every 6 hours if needed, for fever or pain. DO NOT GIVE MORE THAN 4 DOSES IN 24 HOURS.")
         st.write("[Dosing in this calculator comes from healthychildren.org](https://www.healthychildren.org/English/safety-prevention/at-home/medication-safety/Pages/Ibuprofen-for-Fever-and-Pain.aspx)")
 
 
@@ -138,5 +138,5 @@ elif choice == "Age":
     if st.button("Calculate Dosage"):
         result = get_dosage_by_age(age, formulation)
         st.write(result)
-        st.write("Dose: Give every 6 hours if needed, for fever or pain. DO NOT GIVE MORE THAN 4 DOSES IN 24 HOURS.")
+        st.write("Give every 6 hours if needed, for fever or pain. DO NOT GIVE MORE THAN 4 DOSES IN 24 HOURS.")
         st.write("[Dosing in this calculator comes from healthychildren.org](https://www.healthychildren.org/English/safety-prevention/at-home/medication-safety/Pages/Ibuprofen-for-Fever-and-Pain.aspx)")
