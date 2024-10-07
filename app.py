@@ -55,7 +55,6 @@ def calculate_dose(dosage_mg, formulation, age=None, weight=None):
         'Adult Tablets': ('Adult Tablets', 200, 'tablet', '>10', '>55')
     }
 
-    # Remove the concentration part in parentheses before checking
     formulation_cleaned = formulation.split('(')[0].strip()
 
     if formulation_cleaned not in formulations:
@@ -63,7 +62,6 @@ def calculate_dose(dosage_mg, formulation, age=None, weight=None):
 
     formulation_name, concentration, form_type, age_range, weight_range = formulations[formulation_cleaned]
 
-    # Warning if age or weight does not match typical use
     if age is not None:
         if (formulation_cleaned == 'Infant Drops' and age >= 24) or \
            (formulation_cleaned in ['Children’s Liquid', 'Chewable Tablets', 'Junior-Strength Chewable Tablets'] and not (24 <= age <= 143)) or \
@@ -78,7 +76,6 @@ def calculate_dose(dosage_mg, formulation, age=None, weight=None):
             warning = f"{formulation_name} is not typically used for this weight. Please make sure you selected the correct formulation."
             st.warning(warning)
 
-    # Calculate the required dose based on formulation type
     if form_type == 'liquid':
         dose_ml = dosage_mg / concentration
         return f"Dosage: {round(dose_ml, 1)} mL of {formulation_name}"
@@ -95,7 +92,7 @@ choice = st.selectbox("Select Dosing by Weight or Age", ["Weight", "Age"])
 if choice == "Weight":
     unit = st.selectbox("Select Dosing By Kilograms or Pounds", ["Kilograms", "Pounds"])
 
-    weight = st.number_input(f"Enter the Patient's Weight in {unit}", min_value=0.0, step=0.1)
+    weight = st.number_input(f"Enter the Patient's Weight in {unit}", min_value=0.0, step=1.0)
 
     if unit == "Pounds":
         weight *= 0.453592
@@ -114,6 +111,9 @@ if choice == "Weight":
     if st.button("Calculate Dosage"):
         result = get_dosage_by_weight(weight, formulation)
         st.write(result)
+        st.write("Dose: Give every 6 hours if needed, for fever or pain. DO NOT GIVE MORE THAN 4 DOSES IN 24 HOURS.")
+        st.write("[Dosing in this calculator comes from healthychildren.org](https://www.healthychildren.org/English/safety-prevention/at-home/medication-safety/Pages/Ibuprofen-for-Fever-and-Pain.aspx)")
+
 
 elif choice == "Age":
     age_unit = st.selectbox("Select Age as Years or Months", ["Years", "Months"])
@@ -138,3 +138,5 @@ elif choice == "Age":
     if st.button("Calculate Dosage"):
         result = get_dosage_by_age(age, formulation)
         st.write(result)
+        st.write("Dose: Give every 6 hours if needed, for fever or pain. DO NOT GIVE MORE THAN 4 DOSES IN 24 HOURS.")
+        st.write("[Dosing in this calculator comes from healthychildren.org](https://www.healthychildren.org/English/safety-prevention/at-home/medication-safety/Pages/Ibuprofen-for-Fever-and-Pain.aspx)")
